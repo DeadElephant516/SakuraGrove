@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqpwfo1vqtpo2"]
+
+[ext_resource type="Texture2D" uid="uid://dbw585m1ngj3y" path="res://Art/SKY.png" id="1_cwgoq"]
+[ext_resource type="Texture2D" uid="uid://4401wkikpext" path="res://Art/TREES2.png" id="2_je11x"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_je11x"]
+
+[node name="Parallax" type="Node2D"]
+
+[node name="Sky" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Sky"]
+position = Vector2(-83, -21)
+scale = Vector2(2, 2)
+texture = ExtResource("1_cwgoq")
+centered = false
+
+[node name="Trees" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.5, 0.5)
+repeat_size = Vector2(640, 0)
+repeat_times = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="Trees"]
+position = Vector2(179, 269)
+texture = ExtResource("2_je11x")
+centered = false
+
+[node name="TextureRect" type="TextureRect" parent="Trees"]
+modulate = Color(0, 0, 0, 1)
+offset_left = 1.0
+offset_top = 608.0
+offset_right = 1155.0
+offset_bottom = 928.0
+texture = SubResource("CanvasTexture_je11x")

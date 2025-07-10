@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://dnkqfo23ver34"]
+[gd_scene load_steps=8 format=3 uid="uid://dnkqfo23ver34"]
 
 [ext_resource type="PackedScene" uid="uid://buryko0xq5e0y" path="res://Scenes/PlayerScene/player.tscn" id="1_fyvjo"]
 [ext_resource type="PackedScene" uid="uid://bgdd5a05wq00f" path="res://Scenes/Items/DoubleJump/double_jump_enabler.tscn" id="2_4a7y3"]
 [ext_resource type="PackedScene" uid="uid://dp0t24n7aivwv" path="res://Scenes/Items/Glide/glide_enabler.tscn" id="3_boajs"]
+[ext_resource type="PackedScene" uid="uid://dqpwfo1vqtpo2" path="res://Scenes/ParallaxScenes/parallax.tscn" id="4_w5fok"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1m2j8"]
 
@@ -79,3 +80,6 @@ shape = SubResource("WorldBoundaryShape2D_4a7y3")
 
 [node name="GlideEnabler" parent="." instance=ExtResource("3_boajs")]
 position = Vector2(961, 583)
+
+[node name="Parallax" parent="." instance=ExtResource("4_w5fok")]
+z_index = -2

@@ -11,7 +11,7 @@ var direction: Vector2 = Vector2.ZERO
 var jumps_made: int = 0
 var max_jumps: int = 2
 var is_gliding: bool = false
-var max_glide_time: float = 3.0
+var max_glide_time: float = 2.0
 var remaining_glide_time: float = 0.0
 
 
