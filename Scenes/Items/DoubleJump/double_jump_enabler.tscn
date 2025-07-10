@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bgdd5a05wq00f"]
 
-[ext_resource type="Script" uid="uid://jxhmgmeufwyl" path="res://Scenes/Items/double_jump_enabler.gd" id="1_u7t4c"]
+[ext_resource type="Script" uid="uid://jxhmgmeufwyl" path="res://Scenes/Items/DoubleJump/double_jump_enabler.gd" id="1_u7t4c"]
 [ext_resource type="Texture2D" uid="uid://btxtih47bxifc" path="res://icon.svg" id="2_5qxob"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4vdco"]

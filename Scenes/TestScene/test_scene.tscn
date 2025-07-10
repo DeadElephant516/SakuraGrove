@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dnkqfo23ver34"]
+[gd_scene load_steps=7 format=3 uid="uid://dnkqfo23ver34"]
 
 [ext_resource type="PackedScene" uid="uid://buryko0xq5e0y" path="res://Scenes/PlayerScene/player.tscn" id="1_fyvjo"]
-[ext_resource type="PackedScene" uid="uid://bgdd5a05wq00f" path="res://Scenes/Items/double_jump_enabler.tscn" id="2_4a7y3"]
+[ext_resource type="PackedScene" uid="uid://bgdd5a05wq00f" path="res://Scenes/Items/DoubleJump/double_jump_enabler.tscn" id="2_4a7y3"]
+[ext_resource type="PackedScene" uid="uid://dp0t24n7aivwv" path="res://Scenes/Items/Glide/glide_enabler.tscn" id="3_boajs"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1m2j8"]
 
@@ -51,6 +52,18 @@ texture = SubResource("CanvasTexture_1m2j8")
 position = Vector2(583.5, 11.5)
 shape = SubResource("RectangleShape2D_fyvjo")
 
+[node name="StaticBody2D4" type="StaticBody2D" parent="Platforms"]
+position = Vector2(4235, 613)
+
+[node name="TextureRect" type="TextureRect" parent="Platforms/StaticBody2D4"]
+offset_right = 1167.0
+offset_bottom = 23.0
+texture = SubResource("CanvasTexture_1m2j8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/StaticBody2D4"]
+position = Vector2(583.5, 11.5)
+shape = SubResource("RectangleShape2D_fyvjo")
+
 [node name="Player" parent="." instance=ExtResource("1_fyvjo")]
 position = Vector2(122, 634)
 
@@ -63,3 +76,6 @@ position = Vector2(1732, 600)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D"]
 shape = SubResource("WorldBoundaryShape2D_4a7y3")
+
+[node name="GlideEnabler" parent="." instance=ExtResource("3_boajs")]
+position = Vector2(3045, 395)

@@ -2,14 +2,19 @@ extends CharacterBody2D
 
 class_name Player
 
+
 @export var speed: float = 300.0
 @export var jump_force: float = -500.0
+
 
 var direction: Vector2 = Vector2.ZERO
 var jumps_made: int = 0
 var max_jumps: int = 2
+var is_gliding: bool = false
 
 const GRAVITY: float = 900.0
+const GLIDE_GRAVITY: float = 200.0
+
 
 
 func _physics_process(delta: float) -> void:
@@ -21,9 +26,17 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
+
 func apply_gravity(delta:float) -> void:
 	if !is_on_floor():
-		velocity.y += GRAVITY * delta
+		if Input.is_action_pressed("glide") and PlayerData.can_glide:
+			is_gliding = true
+			velocity.y += GLIDE_GRAVITY * delta
+		else:
+			is_gliding = false
+			velocity.y += GRAVITY * delta
+	else:
+		is_gliding = false
 
 
 func get_input() -> void:
