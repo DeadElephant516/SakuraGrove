@@ -6,15 +6,10 @@ class_name Player
 @export var jump_force: float = -500.0
 
 var direction: Vector2 = Vector2.ZERO
-var can_double_jump: bool = false
 var jumps_made: int = 0
 var max_jumps: int = 2
 
 const GRAVITY: float = 900.0
-
-
-func _ready() -> void:
-	SignalBus._enable_double_jump.connect(enable_double_jump)
 
 
 func _physics_process(delta: float) -> void:
@@ -46,7 +41,7 @@ func reset_jumps() -> void:
 
 func handle_jump() -> void:
 	if Input.is_action_just_pressed("jump"):
-		if can_double_jump:
+		if PlayerData.can_double_jump:
 			double_jump()
 		else:
 			jump()
@@ -61,7 +56,3 @@ func double_jump() -> void:
 	if jumps_made < max_jumps:
 		velocity.y = jump_force
 		jumps_made += 1
-
-
-func enable_double_jump() -> void:
-	can_double_jump = true
