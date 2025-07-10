@@ -2,7 +2,7 @@ extends Node
 
 var can_double_jump: bool = false
 var can_glide: bool = false
-
+var max_glide_time: float = 2.0
 
 
 ### Helper functions above to manipulate the player data and flags ####

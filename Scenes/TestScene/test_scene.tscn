@@ -16,6 +16,7 @@ distance = -753.0
 [node name="TestScene" type="Node2D"]
 
 [node name="Platforms" type="Node2D" parent="."]
+position = Vector2(-46, 30)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Platforms"]
 position = Vector2(-582, 732)
@@ -76,6 +77,7 @@ position = Vector2(828, 584)
 [node name="StaticBody2D" type="StaticBody2D" parent="Borders"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D"]
+position = Vector2(0, 88)
 shape = SubResource("WorldBoundaryShape2D_4a7y3")
 
 [node name="GlideEnabler" parent="." instance=ExtResource("3_boajs")]
