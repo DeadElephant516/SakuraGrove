@@ -73,10 +73,12 @@ func double_jump() -> void:
 
 func glide(delta: float) -> void:
 	if !is_on_floor() and PlayerData.can_glide:
-		if Input.is_action_pressed("glide") and remaining_glide_time > 0.0:
+		if Input.is_action_pressed("glide") and remaining_glide_time > 0.0 and velocity.y >= 0:
 			is_gliding = true
 			velocity.y += GLIDE_GRAVITY * delta
 			remaining_glide_time -= delta
+			if velocity.y > 100:
+				velocity.y = 100
 		else:
 			is_gliding = false
 	else:
