@@ -30,6 +30,22 @@ texture = SubResource("CanvasTexture_1m2j8")
 position = Vector2(583.5, 11.5)
 shape = SubResource("RectangleShape2D_fyvjo")
 
+[node name="StaticBody2D" type="StaticBody2D" parent="Platforms/StaticBody2D"]
+position = Vector2(-582, 732)
+
+[node name="TextureRect" type="TextureRect" parent="Platforms/StaticBody2D/StaticBody2D"]
+offset_left = 1036.0
+offset_top = -1902.0
+offset_right = 2203.0
+offset_bottom = -1879.0
+rotation = 1.57079
+texture = SubResource("CanvasTexture_1m2j8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/StaticBody2D/StaticBody2D"]
+position = Vector2(1024, -1312)
+rotation = 1.57079
+shape = SubResource("RectangleShape2D_fyvjo")
+
 [node name="StaticBody2D2" type="StaticBody2D" parent="Platforms"]
 position = Vector2(700, 627)
 
@@ -51,7 +67,7 @@ offset_bottom = 23.0
 texture = SubResource("CanvasTexture_1m2j8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/StaticBody2D3"]
-position = Vector2(583.5, 11.5)
+position = Vector2(583, 12)
 shape = SubResource("RectangleShape2D_fyvjo")
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="Platforms"]
