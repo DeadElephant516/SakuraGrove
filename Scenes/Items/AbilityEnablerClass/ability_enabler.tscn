@@ -3,8 +3,6 @@
 [ext_resource type="Script" uid="uid://cr3ovov7pjl0u" path="res://Scenes/Items/AbilityEnablerClass/ability_enabler.gd" id="1_ik3jj"]
 
 [node name="AbilityEnabler" type="Area2D"]
-collision_layer = 32
-collision_mask = 2
 script = ExtResource("1_ik3jj")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

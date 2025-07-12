@@ -8,7 +8,7 @@ var max_glide_time: float = 2.0
 var can_dash: bool = false
 var dash_speed: float = 800.0
 var dash_duration: float = 0.2
-var player_position: Vector2 = Vector2.ZERO
+
 
 
 ### Helper functions above to manipulate the player data and flags ####
