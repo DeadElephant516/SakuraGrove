@@ -1,4 +1,4 @@
 extends Node
 
-signal _enable_double_jump()
-signal _enable_glide()
+signal unlock_ability(ability_type:String)
+#this signal gets a string as a parameter so it knows to which ability it should point
