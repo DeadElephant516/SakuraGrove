@@ -60,7 +60,7 @@ func get_input() -> void:
 
 func move() -> void:
 	velocity.x = speed * direction.x
-
+	PlayerData.player_position = global_position
 
 func reset_jumps() -> void:
 	if is_on_floor():
@@ -73,7 +73,6 @@ func handle_jump() -> void:
 			double_jump()
 		else:
 			jump()
-
 
 func jump() -> void:
 	if is_on_floor():
