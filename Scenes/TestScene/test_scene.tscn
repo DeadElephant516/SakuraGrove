@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://dnkqfo23ver34"]
+[gd_scene load_steps=10 format=3 uid="uid://dnkqfo23ver34"]
 
 [ext_resource type="PackedScene" uid="uid://buryko0xq5e0y" path="res://Scenes/PlayerScene/player.tscn" id="1_fyvjo"]
 [ext_resource type="PackedScene" uid="uid://cx58a6qn3br1e" path="res://Scenes/Items/AbilityEnablerClass/DoubleJump/double_jump_enabler.tscn" id="3_boajs"]
 [ext_resource type="PackedScene" uid="uid://7i25hp3jvd1q" path="res://Scenes/Items/AbilityEnablerClass/GlideEnabler/glide_enabler.tscn" id="4_egy0e"]
 [ext_resource type="PackedScene" uid="uid://dqpwfo1vqtpo2" path="res://Scenes/ParallaxScenes/parallax.tscn" id="4_w5fok"]
 [ext_resource type="PackedScene" uid="uid://cqwwwbjv6ydvg" path="res://Scenes/Items/AbilityEnablerClass/DashEnabler/dash_enabler.tscn" id="5_egy0e"]
+[ext_resource type="PackedScene" uid="uid://01f041uva6wc" path="res://Scenes/Enemies/dummy_enemy.tscn" id="6_wm1xt"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1m2j8"]
 
@@ -100,10 +101,23 @@ z_index = -2
 [node name="Items" type="Node2D" parent="."]
 
 [node name="DoubleJumpEn" parent="Items" instance=ExtResource("3_boajs")]
-position = Vector2(216, 653)
+position = Vector2(326, 734)
+collision_layer = 1
+collision_mask = 1
 
 [node name="GlideEnabler" parent="Items" instance=ExtResource("4_egy0e")]
 position = Vector2(513, 566)
+collision_layer = 1
+collision_mask = 1
 
 [node name="DashEnabler" parent="Items" instance=ExtResource("5_egy0e")]
 position = Vector2(745, 526)
+collision_layer = 1
+collision_mask = 1
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="DummyEnemy" parent="Enemies" instance=ExtResource("6_wm1xt")]
+position = Vector2(1042, 580)
+collision_layer = 1
+collision_mask = 1

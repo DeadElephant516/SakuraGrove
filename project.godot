@@ -49,6 +49,15 @@ dash={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="Terrain"
+2d_physics/layer_2="Player Physics"
+2d_physics/layer_3="Player Hitbox"
+2d_physics/layer_4="Enemy Physics"
+2d_physics/layer_5="Enemy Hitbox"
+2d_physics/layer_6="ItemLayer"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
