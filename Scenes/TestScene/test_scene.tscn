@@ -1,7 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://dnkqfo23ver34"]
+[gd_scene load_steps=9 format=3 uid="uid://dnkqfo23ver34"]
 
 [ext_resource type="PackedScene" uid="uid://buryko0xq5e0y" path="res://Scenes/PlayerScene/player.tscn" id="1_fyvjo"]
-[ext_resource type="PackedScene" uid="uid://bgdd5a05wq00f" path="res://Scenes/Items/double_jump_enabler.tscn" id="2_4a7y3"]
+[ext_resource type="PackedScene" uid="uid://cx58a6qn3br1e" path="res://Scenes/Items/AbilityEnablerClass/DoubleJump/double_jump_enabler.tscn" id="3_boajs"]
+[ext_resource type="PackedScene" uid="uid://7i25hp3jvd1q" path="res://Scenes/Items/AbilityEnablerClass/GlideEnabler/glide_enabler.tscn" id="4_egy0e"]
+[ext_resource type="PackedScene" uid="uid://dqpwfo1vqtpo2" path="res://Scenes/ParallaxScenes/parallax.tscn" id="4_w5fok"]
+[ext_resource type="PackedScene" uid="uid://cqwwwbjv6ydvg" path="res://Scenes/Items/AbilityEnablerClass/DashEnabler/dash_enabler.tscn" id="5_egy0e"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1m2j8"]
 
@@ -14,6 +17,7 @@ distance = -753.0
 [node name="TestScene" type="Node2D"]
 
 [node name="Platforms" type="Node2D" parent="."]
+position = Vector2(-46, 30)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Platforms"]
 position = Vector2(-582, 732)
@@ -25,6 +29,22 @@ texture = SubResource("CanvasTexture_1m2j8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/StaticBody2D"]
 position = Vector2(583.5, 11.5)
+shape = SubResource("RectangleShape2D_fyvjo")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Platforms/StaticBody2D"]
+position = Vector2(-582, 732)
+
+[node name="TextureRect" type="TextureRect" parent="Platforms/StaticBody2D/StaticBody2D"]
+offset_left = 1036.0
+offset_top = -1902.0
+offset_right = 2203.0
+offset_bottom = -1879.0
+rotation = 1.57079
+texture = SubResource("CanvasTexture_1m2j8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/StaticBody2D/StaticBody2D"]
+position = Vector2(1024, -1312)
+rotation = 1.57079
 shape = SubResource("RectangleShape2D_fyvjo")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="Platforms"]
@@ -48,18 +68,42 @@ offset_bottom = 23.0
 texture = SubResource("CanvasTexture_1m2j8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/StaticBody2D3"]
+position = Vector2(583, 12)
+shape = SubResource("RectangleShape2D_fyvjo")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Platforms"]
+position = Vector2(4235, 613)
+
+[node name="TextureRect" type="TextureRect" parent="Platforms/StaticBody2D4"]
+offset_right = 1167.0
+offset_bottom = 23.0
+texture = SubResource("CanvasTexture_1m2j8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/StaticBody2D4"]
 position = Vector2(583.5, 11.5)
 shape = SubResource("RectangleShape2D_fyvjo")
 
 [node name="Player" parent="." instance=ExtResource("1_fyvjo")]
 position = Vector2(122, 634)
 
-[node name="DoubleJumpEnabler" parent="." instance=ExtResource("2_4a7y3")]
-position = Vector2(1732, 600)
-
 [node name="Borders" type="Node2D" parent="."]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Borders"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D"]
+position = Vector2(0, 88)
 shape = SubResource("WorldBoundaryShape2D_4a7y3")
+
+[node name="Parallax" parent="." instance=ExtResource("4_w5fok")]
+z_index = -2
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="DoubleJumpEn" parent="Items" instance=ExtResource("3_boajs")]
+position = Vector2(216, 653)
+
+[node name="GlideEnabler" parent="Items" instance=ExtResource("4_egy0e")]
+position = Vector2(513, 566)
+
+[node name="DashEnabler" parent="Items" instance=ExtResource("5_egy0e")]
+position = Vector2(745, 526)

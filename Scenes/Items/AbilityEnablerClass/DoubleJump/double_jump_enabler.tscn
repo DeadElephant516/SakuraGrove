@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://cx58a6qn3br1e"]
+
+[ext_resource type="PackedScene" uid="uid://c5oimoi16lccg" path="res://Scenes/Items/AbilityEnablerClass/ability_enabler.tscn" id="1_jlm1o"]
+[ext_resource type="Script" uid="uid://4supa0eipp5k" path="res://Scenes/Items/AbilityEnablerClass/DoubleJump/double_jump_enabler.gd" id="2_j6o6b"]
+[ext_resource type="Texture2D" uid="uid://btxtih47bxifc" path="res://icon.svg" id="2_vee3f"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j6o6b"]
+size = Vector2(44, 44)
+
+[node name="DoubleJumpEnabler" instance=ExtResource("1_jlm1o")]
+script = ExtResource("2_j6o6b")
+ability_type = "double_jump"
+
+[node name="Sprite2D" parent="." index="0"]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_vee3f")
+
+[node name="CollisionShape2D" parent="." index="1"]
+shape = SubResource("RectangleShape2D_j6o6b")

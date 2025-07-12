@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://7i25hp3jvd1q"]
+
+[ext_resource type="PackedScene" uid="uid://c5oimoi16lccg" path="res://Scenes/Items/AbilityEnablerClass/ability_enabler.tscn" id="1_m328c"]
+[ext_resource type="Texture2D" uid="uid://btxtih47bxifc" path="res://icon.svg" id="2_0ebjg"]
+[ext_resource type="Script" uid="uid://beanimmhu72q" path="res://Scenes/Items/AbilityEnablerClass/GlideEnabler/glide_enabler.gd" id="2_6htht"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6htht"]
+size = Vector2(34, 32)
+
+[node name="GlideEnabler" instance=ExtResource("1_m328c")]
+script = ExtResource("2_6htht")
+ability_type = "glide"
+
+[node name="Sprite2D" parent="." index="0"]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_0ebjg")
+
+[node name="CollisionShape2D" parent="." index="1"]
+shape = SubResource("RectangleShape2D_6htht")

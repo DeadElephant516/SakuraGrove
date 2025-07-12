@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://cqwwwbjv6ydvg"]
+
+[ext_resource type="PackedScene" uid="uid://c5oimoi16lccg" path="res://Scenes/Items/AbilityEnablerClass/ability_enabler.tscn" id="1_ujfpj"]
+[ext_resource type="Texture2D" uid="uid://btxtih47bxifc" path="res://icon.svg" id="2_2c8lq"]
+[ext_resource type="Script" uid="uid://b2maa7gb2olek" path="res://Scenes/Items/AbilityEnablerClass/DashEnabler/dash_enabler.gd" id="2_15g4t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ujfpj"]
+size = Vector2(34, 34)
+
+[node name="DashEnabler" instance=ExtResource("1_ujfpj")]
+script = ExtResource("2_15g4t")
+ability_type = "dash"
+
+[node name="Sprite2D" parent="." index="0"]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_2c8lq")
+
+[node name="CollisionShape2D" parent="." index="1"]
+shape = SubResource("RectangleShape2D_ujfpj")
