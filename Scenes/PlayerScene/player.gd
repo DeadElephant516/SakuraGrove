@@ -201,10 +201,6 @@ func get_input() -> void:
 	Uses InputMap actions 'left' and 'right'.
 	"""
 	direction.x = Input.get_axis("left", "right")
-	if direction.x < 0.0:
-		$Sprite2D.flip_h = true
-	else:
-		$Sprite2D.flip_h = false
 
 func move() -> void:
 	"""

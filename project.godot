@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="TheGrove"
-run/main_scene="uid://dnkqfo23ver34"
+run/main_scene="uid://cayxd5t7ornxe"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 SignalBus="*res://Globals/SignalBus.gd"
 PlayerData="*res://Globals/PlayerData.gd"
+
+[dotnet]
+
+project/assembly_name="TheGrove"
 
 [input]
 
