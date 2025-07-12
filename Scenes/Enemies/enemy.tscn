@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://duvpwre12xwcr" path="res://Scenes/Enemies/enemy.gd" id="1_613su"]
 
 [node name="Enemy" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 3
 script = ExtResource("1_613su")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -10,6 +12,8 @@ script = ExtResource("1_613su")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
 [node name="HitBox" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 

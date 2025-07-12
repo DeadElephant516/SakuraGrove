@@ -102,14 +102,22 @@ z_index = -2
 
 [node name="DoubleJumpEn" parent="Items" instance=ExtResource("3_boajs")]
 position = Vector2(326, 734)
+collision_layer = 1
+collision_mask = 1
 
 [node name="GlideEnabler" parent="Items" instance=ExtResource("4_egy0e")]
 position = Vector2(513, 566)
+collision_layer = 1
+collision_mask = 1
 
 [node name="DashEnabler" parent="Items" instance=ExtResource("5_egy0e")]
 position = Vector2(745, 526)
+collision_layer = 1
+collision_mask = 1
 
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="DummyEnemy" parent="Enemies" instance=ExtResource("6_wm1xt")]
 position = Vector2(1042, 580)
+collision_layer = 1
+collision_mask = 1
