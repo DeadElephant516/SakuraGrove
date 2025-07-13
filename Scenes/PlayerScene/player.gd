@@ -61,6 +61,12 @@ enum State { IDLE, WALK, JUMP, GLIDE, DASH }
 # Current active state (starts as IDLE)
 var current_state: State = State.IDLE
 
+# -- Enemy Interaction ---------------------------------------------------
+# Player invincibility after taking damage
+var invincible: bool = false
+var invincible_timer: float = 0.0
+@export var invincible_duration: float = 1.0
+
 # ------------------------------------------------------------------------------
 # Godot Lifecycle Hooks
 # ------------------------------------------------------------------------------
@@ -71,6 +77,9 @@ func _ready() -> void:
 	Initializes all player-related values from PlayerData.
 	"""
 	initialize_values()
+	
+	# Add player to "player" group for enemy detection
+	add_to_group("player")
 
 func _physics_process(delta: float) -> void:
 	"""
@@ -82,18 +91,24 @@ func _physics_process(delta: float) -> void:
 
 	# 2. Decrease dash cooldown timer regardless of state
 	dash_cooldown_timer = max(dash_cooldown_timer - delta, 0.0)
+	
+	# 3. Update invincibility timer
+	update_invincibility(delta)
 
-	# 3. Apply gravity (unless grounded, gliding, or dashing)
+	# 4. Apply gravity (unless grounded, gliding, or dashing)
 	apply_gravity(delta)
 
-	# 4. Reset jump counter when grounded
+	# 5. Reset jump counter when grounded
 	reset_jumps()
 
-	# 5. Update current FSM state (checks transitions & actions)
+	# 6. Update current FSM state (checks transitions & actions)
 	update_states(delta)
 
-	# 6. Move the character according to velocity
+	# 7. Move the character according to velocity
 	move_and_slide()
+	
+	# 8. Check for enemy collisions after movement
+	check_enemy_collision()
 
 # ------------------------------------------------------------------------------
 # FSM Core: State Switching Logic
@@ -300,6 +315,96 @@ func can_dash() -> bool:
 	Returns true if dash is unlocked, cooldown is over, and player is moving.
 	"""
 	return PlayerData.can_dash and dash_cooldown_timer <= 0.0 and direction.x != 0
+
+# ------------------------------------------------------------------------------
+# Enemy Interaction (Step 4 from Tutorial)
+# ------------------------------------------------------------------------------
+
+func check_enemy_collision() -> void:
+	"""
+	Checks for collisions with enemies after movement.
+	Handles jumping on enemies vs taking damage from side collisions.
+	"""
+	for i in get_slide_collision_count():
+		var collision = get_slide_collision(i)
+		var collider = collision.get_collider()
+		
+		if collider is Enemy:
+			var enemy = collider as Enemy
+			
+			# Check if player is above enemy (jumped on it)
+			if velocity.y > 0 and global_position.y < enemy.global_position.y - 10:
+				if enemy.can_be_jumped_on():
+					# Player jumped on enemy
+					enemy.take_damage(1, Vector2.DOWN * 100)
+					velocity.y = jump_force * 0.7  # Bounce off enemy
+					print("Jumped on enemy!")
+			else:
+				# Player hit enemy from side - take damage or knockback
+				if not invincible:
+					handle_enemy_hit(enemy)
+
+func handle_enemy_hit(enemy: Enemy) -> void:
+	"""
+	Handles what happens when player gets hit by an enemy from the side.
+	You can customize this based on your game's damage/health system.
+	"""
+	if invincible:
+		return
+	
+	# Apply knockback away from enemy
+	var knockback_direction = sign(global_position.x - enemy.global_position.x)
+	if knockback_direction == 0:
+		knockback_direction = 1  # Default to right if exactly aligned
+	
+	# Apply knockback force
+	velocity.x = knockback_direction * 200.0
+	velocity.y = -100.0  # Small upward bump
+	
+	# Start invincibility period
+	start_invincibility()
+	
+	# Here you could:
+	# - Reduce player health/lives
+	# - Play damage sound/animation
+	# - Update UI
+	# - Trigger game over if health reaches 0
+	
+	print("Player hit by enemy! Knockback applied.")
+
+func start_invincibility() -> void:
+	"""
+	Starts the invincibility period after taking damage.
+	"""
+	invincible = true
+	invincible_timer = invincible_duration
+	
+	# Visual feedback - make player flash
+	flash_player()
+
+func update_invincibility(delta: float) -> void:
+	"""
+	Updates invincibility timer and ends invincibility when time runs out.
+	"""
+	if invincible:
+		invincible_timer -= delta
+		if invincible_timer <= 0.0:
+			invincible = false
+			# Restore normal appearance
+			if has_node("Sprite2D"):
+				$Sprite2D.modulate = Color.WHITE
+
+func flash_player() -> void:
+	"""
+	Creates a flashing effect during invincibility.
+	Assumes you have a Sprite2D child node.
+	"""
+	if has_node("Sprite2D"):
+		var sprite = $Sprite2D
+		var tween = create_tween()
+		tween.set_loops(int(invincible_duration * 4))  # Flash 4 times per second
+		tween.tween_property(sprite, "modulate", Color.RED, 0.125)
+		tween.tween_property(sprite, "modulate", Color.WHITE, 0.125)
 
 # ------------------------------------------------------------------------------
 # Initialization

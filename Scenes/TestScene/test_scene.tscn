@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dnkqfo23ver34"]
+[gd_scene load_steps=12 format=3 uid="uid://dnkqfo23ver34"]
 
 [ext_resource type="Script" uid="uid://bdm4o6yhd4rti" path="res://Scenes/TestScene/test_scene.gd" id="1_8xnil"]
 [ext_resource type="PackedScene" uid="uid://buryko0xq5e0y" path="res://Scenes/PlayerScene/player.tscn" id="1_fyvjo"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dqpwfo1vqtpo2" path="res://Scenes/ParallaxScenes/parallax.tscn" id="4_w5fok"]
 [ext_resource type="PackedScene" uid="uid://cqwwwbjv6ydvg" path="res://Scenes/Items/AbilityEnablerClass/DashEnabler/dash_enabler.tscn" id="5_egy0e"]
 [ext_resource type="PackedScene" uid="uid://01f041uva6wc" path="res://Scenes/Enemies/dummy_enemy.tscn" id="6_wm1xt"]
+[ext_resource type="PackedScene" uid="uid://cxbaqudgujvnj" path="res://Scenes/loms enemies/enemy.tscn" id="8_8xnil"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1m2j8"]
 
@@ -123,3 +124,6 @@ collision_mask = 1
 position = Vector2(1042, 580)
 collision_layer = 1
 collision_mask = 1
+
+[node name="Enemy" parent="." instance=ExtResource("8_8xnil")]
+position = Vector2(985, 297)

@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://cxbaqudgujvnj"]
+
+[ext_resource type="Script" uid="uid://o55s4y2nva5j" path="res://Scenes/loms enemies/enemy.gd" id="1_2jynd"]
+[ext_resource type="Texture2D" uid="uid://btxtih47bxifc" path="res://icon.svg" id="1_qds07"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2jynd"]
+size = Vector2(71, 70)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_umhiq"]
+radius = 282.007
+
+[node name="Enemy" type="CharacterBody2D"]
+script = ExtResource("1_2jynd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(433.5, 322.5)
+scale = Vector2(0.601562, 0.570312)
+texture = ExtResource("1_qds07")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(433.5, 323)
+shape = SubResource("RectangleShape2D_2jynd")
+
+[node name="GroundRaycast" type="RayCast2D" parent="."]
+target_position = Vector2(0, 25)
+
+[node name="WallRaycast" type="RayCast2D" parent="."]
+target_position = Vector2(20, 0)
+
+[node name="PlayerDetection" type="Area2D" parent="."]
+collision_mask = 6
+
+[node name="DetectionShape" type="CollisionShape2D" parent="PlayerDetection"]
+position = Vector2(435, 323)
+shape = SubResource("CircleShape2D_umhiq")
