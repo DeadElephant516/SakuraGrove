@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cayxd5t7ornxe"]
+[gd_scene load_steps=16 format=3 uid="uid://cayxd5t7ornxe"]
 
 [ext_resource type="Script" uid="uid://v5cmtab34htr" path="res://Scenes/main menu/main_menu.gd" id="1_ahnhv"]
 [ext_resource type="Texture2D" uid="uid://dbw585m1ngj3y" path="res://Art/BackgroundArt/SKY.png" id="1_vtam2"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://koaurytow7or" path="res://edm003-retro-edm-_-gamepixel-racer-358045.mp3" id="4_3nlno"]
 [ext_resource type="Script" uid="uid://5okehd3iub82" path="res://Scenes/main menu/audio_control.gd" id="4_7nb0n"]
 [ext_resource type="Script" uid="uid://dh1k2iydpoltg" path="res://Scenes/main menu/fullscreencontrol.gd" id="5_ahvv6"]
+[ext_resource type="AudioStream" uid="uid://b7r7yucq5wnx5" path="res://click-menu-app-147357.mp3" id="7_dvbj5"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3nlno"]
 texture = ExtResource("1_vtam2")
@@ -85,7 +86,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 15
 
-[node name="Button" type="Button" parent="MainButtons"]
+[node name="Start Game" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -100,7 +101,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_f7g3l")
 text = "Start game
 "
 
-[node name="Button2" type="Button" parent="MainButtons"]
+[node name="Options button" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -115,7 +116,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_f7g3l")
 text = "Options
 "
 
-[node name="Button3" type="Button" parent="MainButtons"]
+[node name="exit" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -172,6 +173,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Back" type="Button" parent="Options"]
+layout_mode = 0
 offset_left = 151.0
 offset_top = 367.0
 offset_right = 550.0
@@ -213,14 +215,18 @@ offset_bottom = 271.0
 text = "Fullscreen"
 script = ExtResource("5_ahvv6")
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="music" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_3nlno")
 autoplay = true
 bus = &"Music"
 
-[connection signal="pressed" from="MainButtons/Button" to="." method="_on_start_pressed"]
-[connection signal="pressed" from="MainButtons/Button2" to="." method="_on_settings_2_pressed"]
-[connection signal="pressed" from="MainButtons/Button3" to="." method="_on_exit_3_pressed"]
+[node name="click SFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_dvbj5")
+pitch_scale = 1.4
+
+[connection signal="pressed" from="MainButtons/Start Game" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="MainButtons/Options button" to="." method="_on_settings_2_pressed"]
+[connection signal="pressed" from="MainButtons/exit" to="." method="_on_exit_3_pressed"]
 [connection signal="pressed" from="Options/Back" to="." method="_on_back_options_pressed"]
 [connection signal="value_changed" from="Options/AudioControl" to="Options/AudioControl" method="_on_value_changed"]
 [connection signal="toggled" from="Options/Fullscreencontrol" to="Options/Fullscreencontrol" method="_on_toggled"]
