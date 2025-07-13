@@ -1,8 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://cayxd5t7ornxe"]
+[gd_scene load_steps=15 format=3 uid="uid://cayxd5t7ornxe"]
 
 [ext_resource type="Script" uid="uid://v5cmtab34htr" path="res://Scenes/main menu/main_menu.gd" id="1_ahnhv"]
 [ext_resource type="Texture2D" uid="uid://dbw585m1ngj3y" path="res://Art/BackgroundArt/SKY.png" id="1_vtam2"]
 [ext_resource type="FontFile" uid="uid://ditilcdjst4qq" path="res://yoster.ttf" id="2_ahnhv"]
+[ext_resource type="AudioStream" uid="uid://koaurytow7or" path="res://edm003-retro-edm-_-gamepixel-racer-358045.mp3" id="4_3nlno"]
+[ext_resource type="Script" uid="uid://5okehd3iub82" path="res://Scenes/main menu/audio_control.gd" id="4_7nb0n"]
+[ext_resource type="Script" uid="uid://dh1k2iydpoltg" path="res://Scenes/main menu/fullscreencontrol.gd" id="5_ahvv6"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3nlno"]
 texture = ExtResource("1_vtam2")
@@ -37,6 +40,18 @@ corner_radius_bottom_left = 16
 shadow_size = 6
 shadow_offset = Vector2(0, 4)
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_3nlno"]
+color = Color(1, 1, 1, 1)
+thickness = 6
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_7nb0n"]
+color = Color(0.850753, 0.175522, 0.129712, 1)
+thickness = 6
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ahvv6"]
+color = Color(0.850753, 0.175522, 0.129712, 1)
+thickness = 6
+
 [node name="Main menu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -55,7 +70,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_3nlno")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="MainButtons" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -70,7 +85,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 15
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="Button" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -85,7 +100,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_f7g3l")
 text = "Start game
 "
 
-[node name="Button2" type="Button" parent="VBoxContainer"]
+[node name="Button2" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -100,7 +115,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_f7g3l")
 text = "Options
 "
 
-[node name="Button3" type="Button" parent="VBoxContainer"]
+[node name="Button3" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -130,6 +145,82 @@ text = "Sukura Grove"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_start_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_settings_2_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_exit_3_pressed"]
+[node name="Options" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -351.0
+offset_top = -173.0
+offset_right = 358.0
+offset_bottom = 330.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Options"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 76.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 39
+text = "Options
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Back" type="Button" parent="Options"]
+offset_left = 151.0
+offset_top = 367.0
+offset_right = 550.0
+offset_bottom = 454.0
+size_flags_vertical = 3
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 46
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vtam2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vtam2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ahnhv")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f7g3l")
+text = "Back
+"
+
+[node name="AudioControl" type="HSlider" parent="Options"]
+layout_mode = 0
+offset_left = 117.0
+offset_top = 61.0
+offset_right = 609.0
+offset_bottom = 176.0
+theme_override_styles/slider = SubResource("StyleBoxLine_3nlno")
+theme_override_styles/grabber_area = SubResource("StyleBoxLine_7nb0n")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_ahvv6")
+max_value = 1.0
+step = 0.01
+value = 0.8
+script = ExtResource("4_7nb0n")
+audio_bus_name = "Music"
+
+[node name="Fullscreencontrol" type="CheckButton" parent="Options"]
+layout_mode = 0
+offset_left = 113.0
+offset_top = 171.0
+offset_right = 613.0
+offset_bottom = 271.0
+text = "Fullscreen"
+script = ExtResource("5_ahvv6")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_3nlno")
+autoplay = true
+bus = &"Music"
+
+[connection signal="pressed" from="MainButtons/Button" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="MainButtons/Button2" to="." method="_on_settings_2_pressed"]
+[connection signal="pressed" from="MainButtons/Button3" to="." method="_on_exit_3_pressed"]
+[connection signal="pressed" from="Options/Back" to="." method="_on_back_options_pressed"]
+[connection signal="value_changed" from="Options/AudioControl" to="Options/AudioControl" method="_on_value_changed"]
+[connection signal="toggled" from="Options/Fullscreencontrol" to="Options/Fullscreencontrol" method="_on_toggled"]
