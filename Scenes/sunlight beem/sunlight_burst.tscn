@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://bgcx4f4yjkgft"]
+
+[ext_resource type="Script" uid="uid://762ubf833tq8" path="res://sunlight_burst.gd" id="1_u3wqq"]
+[ext_resource type="Texture2D" uid="uid://btxtih47bxifc" path="res://icon.svg" id="2_d18yg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_grpgk"]
+size = Vector2(1097, 121)
+
+[node name="SunlightBurst" type="Node2D"]
+script = ExtResource("1_u3wqq")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(704, -20)
+shape = SubResource("RectangleShape2D_grpgk")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 0, 0.764706)
+position = Vector2(705, -19)
+scale = Vector2(8.64063, 1)
+texture = ExtResource("2_d18yg")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
+autostart = true

@@ -88,6 +88,8 @@ shape = SubResource("RectangleShape2D_fyvjo")
 
 [node name="Player" parent="." instance=ExtResource("1_fyvjo")]
 position = Vector2(122, 634)
+dash_cooldown = null
+invincible_duration = null
 
 [node name="Borders" type="Node2D" parent="."]
 

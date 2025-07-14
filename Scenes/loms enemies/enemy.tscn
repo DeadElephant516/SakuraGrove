@@ -11,8 +11,6 @@ radius = 282.007
 
 [node name="Enemy" type="CharacterBody2D"]
 script = ExtResource("1_2jynd")
-patrol_speed = 200.0
-chase_speed = 300.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(433.5, 322.5)

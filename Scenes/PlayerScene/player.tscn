@@ -9,6 +9,8 @@ height = 55.25
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_44xdq")
+dash_cooldown = null
+invincible_duration = null
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-23, -69)

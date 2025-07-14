@@ -101,13 +101,17 @@ func _physics_process(delta: float) -> void:
 	# 5. Reset jump counter when grounded
 	reset_jumps()
 
-	# 6. Update current FSM state (checks transitions & actions)
+	# 6. Check for sunlight burst input
+	if Input.is_action_just_pressed("sunlight_burst"):
+		use_sunlight_burst()
+
+	# 7. Update current FSM state (checks transitions & actions)
 	update_states(delta)
 
-	# 7. Move the character according to velocity
+	# 8. Move the character according to velocity
 	move_and_slide()
 	
-	# 8. Check for enemy collisions after movement
+	# 9. Check for enemy collisions after movement
 	check_enemy_collision()
 
 # ------------------------------------------------------------------------------
@@ -405,6 +409,20 @@ func flash_player() -> void:
 		tween.set_loops(int(invincible_duration * 4))  # Flash 4 times per second
 		tween.tween_property(sprite, "modulate", Color.RED, 0.125)
 		tween.tween_property(sprite, "modulate", Color.WHITE, 0.125)
+
+# ------------------------------------------------------------------------------
+# Sunlight Burst
+# ------------------------------------------------------------------------------
+
+func use_sunlight_burst():
+	"""
+	Activates the sunlight burst beam attack.
+	Creates a beam that shoots in the direction the player is facing.
+	"""
+	var beam = preload("res://Scenes/sunlight beem/sunlight_burst.tscn").instantiate()
+	beam.global_position = global_position
+	beam.rotation = deg_to_rad(180) if direction.x < 0 else 0
+	get_tree().current_scene.add_child(beam)
 
 # ------------------------------------------------------------------------------
 # Initialization
