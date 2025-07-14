@@ -1,239 +1,239 @@
 extends CharacterBody2D
-
 class_name Enemy
 
-# Export variables for tuning
+# Movement settings
 @export var patrol_speed: float = 50.0
-@export var chase_speed: float = 80.0
-@export var patrol_range: float = 100.0
-@export var wait_time: float = 1.0
-@export var detection_range: float = 80.0
-@export var stun_duration: float = 1.0
-@export var knockback_force: float = 300.0
+@export var chase_speed: float = 100.0
+@export var patrol_distance: float = 150.0
+@export var detection_radius: float = 200.0  # Increased detection radius
+@export var chase_threshold: float = 50.0    # Distance to start chasing
+@export var attack_range: float = 30.0       # Distance to perform attacks
+@export var jump_force: float = 300.0
+@export var stun_time: float = 1.0
 
-# Raycast offset for edge/wall checks
-const RAYCAST_OFFSET: float = 15.0
-const GRAVITY: float = 900.0
+# Combat settings
+@export var attack_cooldown: float = 1.0
+@export var damage: int = 1
+@export var health: int = 3
 
-# FSM States
-enum State { PATROL, CHASE, STUN, WAIT, TURN }
-var current_state: State = State.PATROL
+# Physics
+const GRAVITY: float = 980.0
+const MAX_FALL_SPEED: float = 500.0
 
-# Node references
-@onready var sprite: Sprite2D = $Sprite2D
-@onready var ground_raycast: RayCast2D = $GroundRaycast
-@onready var wall_raycast: RayCast2D = $WallRaycast
-@onready var player_detection: Area2D = $PlayerDetection
+# AI State
+enum AIState { IDLE, PATROL_RIGHT, PATROL_LEFT, CHASE, ATTACK, RETREAT, STUNNED, SEARCH }
+var current_state: AIState = AIState.IDLE
+var state_timer: float = 0.0
+var attack_timer: float = 0.0
+var last_seen_position: Vector2 = Vector2.ZERO
+var search_time: float = 3.0
+var search_radius: float = 100.0
 
-# Movement & State variables
-var direction: int = 1
-var origin_position: Vector2
-var wait_timer: float = 0.0
-var stun_timer: float = 0.0
+# References
+@onready var sprite = $Sprite2D
+@onready var vision_area = $VisionArea
+@onready var floor_detector = $FloorDetector
+@onready var wall_detector = $WallDetector
 
-# Player detection
-var player_ref: Player = null
-var player_detected: bool = false
+# Variables
+var spawn_position: Vector2
+var player: Node2D = null
+var player_in_vision: bool = false
+var facing_right: bool = true
+var patrol_target: Vector2
+var can_attack: bool = true
+var search_direction: int = 1
 
-func _ready() -> void:
-	origin_position = global_position
+# Debug
+@export var debug_enabled: bool = true
 
-	ground_raycast.position.x = RAYCAST_OFFSET * direction
-	wall_raycast.position.x = RAYCAST_OFFSET * direction
+func _ready():
+	spawn_position = global_position
+	patrol_target = spawn_position + Vector2(patrol_distance, 0)
 
-	player_ref = get_tree().get_first_node_in_group("player") as Player
-	player_detection.body_entered.connect(_on_player_entered)
-	player_detection.body_exited.connect(_on_player_exited)
+	if vision_area:
+		vision_area.body_entered.connect(_on_vision_area_entered)
+		vision_area.body_exited.connect(_on_vision_area_exited)
+	else:
+		print("VisionArea node missing!")
 
-	# Set enemy to be on both layer 2 and 3
-	set_collision_layer_value(2, true)
-	set_collision_layer_value(3, true)
-	
-	# Set what the enemy can collide with (usually ground/walls on layer 1)
-	set_collision_mask_value(1, true)
-	
-	print("Enemy initialized at position: ", global_position)
+	var players = get_tree().get_nodes_in_group("players")
+	if players.size() > 0:
+		player = players[0]
+	else:
+		print("No player in 'players' group!")
 
-func _physics_process(delta: float) -> void:
+	change_state(AIState.PATROL_RIGHT)
+
+func _physics_process(delta):
+	apply_gravity(delta)
+	update_ai(delta)
+	update_facing_direction()
+	move_and_slide()
+
+	# Update attack cooldown
+	if attack_timer > 0:
+		attack_timer -= delta
+	else:
+		can_attack = true
+
+func apply_gravity(delta):
 	if not is_on_floor():
-		velocity.y += GRAVITY * delta
+		velocity.y = min(velocity.y + GRAVITY * delta, MAX_FALL_SPEED)
 	else:
 		velocity.y = 0
 
-	update_state_machine(delta)
-	move_and_slide()
-	update_sprite_direction()
+func update_ai(delta):
+	var distance_to_player = INF
+	if player:
+		distance_to_player = global_position.distance_to(player.global_position)
 
-	if global_position.y > get_viewport_rect().size.y + 100:
-		reset_to_origin()
-
-func update_state_machine(delta: float) -> void:
 	match current_state:
-		State.PATROL:
-			handle_patrol()
-		State.CHASE:
-			handle_chase()
-		State.WAIT:
-			handle_wait(delta)
-		State.STUN:
-			handle_stun(delta)
-		State.TURN:
-			pass
+		AIState.IDLE:
+			handle_idle(distance_to_player)
+		AIState.PATROL_RIGHT:
+			handle_patrol_right(distance_to_player)
+		AIState.PATROL_LEFT:
+			handle_patrol_left(distance_to_player)
+		AIState.CHASE:
+			handle_chase(distance_to_player)
+		AIState.ATTACK:
+			handle_attack()
+		AIState.RETREAT:
+			handle_retreat()
+		AIState.STUNNED:
+			handle_stunned()
+		AIState.SEARCH:
+			handle_search(delta)
 
-func change_state(new_state: State) -> void:
-	if current_state == new_state:
+func handle_idle(distance: float):
+	velocity.x = 0
+	if player_in_vision and distance < detection_radius:
+		last_seen_position = player.global_position
+		change_state(AIState.CHASE)
+	elif state_timer > 2.0:
+		change_state(AIState.PATROL_RIGHT)
+
+func handle_patrol_right(distance: float):
+	if player_in_vision and distance < detection_radius:
+		last_seen_position = player.global_position
+		change_state(AIState.CHASE)
 		return
 
-	var old_state = current_state
-	current_state = new_state
+	velocity.x = patrol_speed
+	if global_position.x >= spawn_position.x + patrol_distance:
+		change_state(AIState.PATROL_LEFT)
 
-	match new_state:
-		State.WAIT:
-			wait_timer = wait_time
-			velocity.x = 0
-		State.STUN:
-			stun_timer = stun_duration
-			velocity.x = 0
-			flash_red()
-		State.TURN:
-			switch_direction()
-			change_state(State.WAIT)
-	
-	print("Enemy state: %s -> %s" % [State.keys()[old_state], State.keys()[new_state]])
+	if wall_detector and wall_detector.is_colliding() and is_on_floor():
+		velocity.y = -jump_force
 
-func handle_patrol() -> void:
-	if player_detected and player_ref:
-		change_state(State.CHASE)
+func handle_patrol_left(distance: float):
+	if player_in_vision and distance < detection_radius:
+		last_seen_position = player.global_position
+		change_state(AIState.CHASE)
 		return
 
-	if should_turn_around():
-		change_state(State.TURN)
+	velocity.x = -patrol_speed
+	if global_position.x <= spawn_position.x - patrol_distance:
+		change_state(AIState.PATROL_RIGHT)
+
+	if wall_detector and wall_detector.is_colliding() and is_on_floor():
+		velocity.y = -jump_force
+
+func handle_chase(distance: float):
+	if not player:
+		change_state(AIState.PATROL_RIGHT)
 		return
 
-	velocity.x = patrol_speed * direction
-
-func handle_chase() -> void:
-	if not player_detected or not player_ref:
-		change_state(State.PATROL)
+	if not player_in_vision:
+		last_seen_position = player.global_position
+		change_state(AIState.SEARCH)
 		return
 
-	var player_direction = sign(player_ref.global_position.x - global_position.x)
-
-	if should_turn_around():
-		change_state(State.TURN)
+	if distance < attack_range and can_attack:
+		change_state(AIState.ATTACK)
 		return
 
-	velocity.x = chase_speed * player_direction
-	direction = int(player_direction)
-
-func handle_wait(delta: float) -> void:
-	wait_timer -= delta
-	velocity.x = move_toward(velocity.x, 0, patrol_speed * 2 * delta)
-
-	if wait_timer <= 0:
-		var next_state = State.CHASE if player_detected else State.PATROL
-		change_state(next_state)
-
-func handle_stun(delta: float) -> void:
-	stun_timer -= delta
-	velocity.x = move_toward(velocity.x, 0, patrol_speed * 3 * delta)
-
-	if stun_timer <= 0:
-		change_state(State.PATROL)
-
-func should_turn_around() -> bool:
-	if wall_raycast.is_colliding():
-		return true
-	if is_at_platform_edge():
-		return true
-	if abs(global_position.x - origin_position.x) > patrol_range:
-		return true
-	return false
-
-func is_at_platform_edge() -> bool:
-	ground_raycast.position.x = RAYCAST_OFFSET * direction
-	ground_raycast.force_raycast_update()
-	return not ground_raycast.is_colliding()
-
-func switch_direction() -> void:
-	direction *= -1
-	ground_raycast.position.x = RAYCAST_OFFSET * direction
-	wall_raycast.position.x = RAYCAST_OFFSET * direction
-
-func update_sprite_direction() -> void:
-	if sprite:
-		sprite.flip_h = direction < 0
-
-func _on_player_entered(body: Node2D) -> void:
-	if body is Player:
-		player_detected = true
-		player_ref = body
-		print("Player detected!")
-
-func _on_player_exited(body: Node2D) -> void:
-	if body is Player:
-		player_detected = false
-		print("Player lost!")
-
-func take_damage(damage_amount: int = 1, knockback_dir: Vector2 = Vector2.ZERO) -> void:
-	if current_state == State.STUN:
+	if distance > detection_radius * 1.5:
+		change_state(AIState.RETREAT)
 		return
 
-	print("Enemy took damage!")
+	var direction = (player.global_position - global_position).normalized()
+	velocity.x = direction.x * chase_speed
 
-	if knockback_dir != Vector2.ZERO:
-		velocity += knockback_dir * knockback_force
+	if is_on_floor():
+		if player.global_position.y < global_position.y - 20 or (wall_detector and wall_detector.is_colliding()):
+			velocity.y = -jump_force
 
-	change_state(State.STUN)
+func handle_attack():
+	velocity.x = 0
+	if can_attack:
+		perform_attack()
+		can_attack = false
+		attack_timer = attack_cooldown
+		change_state(AIState.CHASE)
+
+func handle_retreat():
+	var direction = (spawn_position - global_position).normalized()
+	velocity.x = direction.x * patrol_speed
+	if global_position.distance_to(spawn_position) < 20:
+		change_state(AIState.IDLE)
+
+func handle_stunned():
+	velocity.x = 0
+	if state_timer > stun_time:
+		change_state(AIState.IDLE)
+
+func handle_search(delta):
+	state_timer -= delta
+	velocity.x = search_direction * patrol_speed * 0.5
+	if state_timer <= 0:
+		search_direction *= -1
+		state_timer = search_time
+	if player_in_vision:
+		change_state(AIState.CHASE)
+	elif global_position.distance_to(last_seen_position) > search_radius:
+		change_state(AIState.RETREAT)
+
+func perform_attack():
+	if debug_enabled:
+		print("Enemy attacking!")
+	# Implement actual attack logic here
+
+func change_state(new_state: AIState):
+	if current_state != new_state:
+		if debug_enabled:
+			print("State change:", AIState.keys()[current_state], "->", AIState.keys()[new_state])
+		current_state = new_state
+		state_timer = 0
+
+func update_facing_direction():
+	if velocity.x > 0 and not facing_right:
+		sprite.flip_h = false
+		facing_right = true
+	elif velocity.x < 0 and facing_right:
+		sprite.flip_h = true
+		facing_right = false
+
+func _on_vision_area_entered(body):
+	if body.is_in_group("players"):
+		player = body
+		player_in_vision = true
+		if debug_enabled:
+			print("Player entered vision")
+
+func _on_vision_area_exited(body):
+	if body == player:
+		player_in_vision = false
+		if debug_enabled:
+			print("Player exited vision")
+
+func take_damage(amount: int, knockback: Vector2):
+	health -= amount
+	velocity += knockback
+	change_state(AIState.STUNNED)
+	if health <= 0:
+		queue_free()
 
 func can_be_jumped_on() -> bool:
-	return current_state != State.STUN
-
-func flash_red() -> void:
-	if sprite:
-		sprite.modulate = Color.RED
-		var tween = create_tween()
-		tween.tween_property(sprite, "modulate", Color.WHITE, 0.2)
-
-# ------------------------------------------------------------------------------
-# Step 6: Utility Functions
-# ------------------------------------------------------------------------------
-
-func reset_to_origin() -> void:
-	"""
-	Resets enemy to its starting position and state.
-	Useful for when enemy falls off the world or gets stuck.
-	"""
-	global_position = origin_position
-	velocity = Vector2.ZERO
-	change_state(State.PATROL)
-	print("Enemy reset to origin")
-
-func get_distance_to_player() -> float:
-	"""
-	Returns the distance between enemy and player.
-	Returns INF if no player reference exists.
-	"""
-	if player_ref:
-		return global_position.distance_to(player_ref.global_position)
-	return INF
-
-func is_player_above() -> bool:
-	"""
-	Checks if player is positioned above the enemy.
-	Useful for jump-on detection and AI decisions.
-	"""
-	if player_ref:
-		return player_ref.global_position.y < global_position.y - 10
-	return false
-
-func get_debug_info() -> String:
-	"""
-	Returns a formatted debug string with current enemy state info.
-	Useful for on-screen debugging or console output.
-	"""
-	return "State: %s | Dir: %d | Player: %s" % [
-		State.keys()[current_state],
-		direction,
-		"Detected" if player_detected else "Lost"
-	]
+	return true

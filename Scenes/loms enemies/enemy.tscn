@@ -11,6 +11,8 @@ radius = 282.007
 
 [node name="Enemy" type="CharacterBody2D"]
 script = ExtResource("1_2jynd")
+patrol_speed = 200.0
+chase_speed = 300.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(433.5, 322.5)
@@ -22,7 +24,6 @@ position = Vector2(433.5, 323)
 shape = SubResource("RectangleShape2D_2jynd")
 
 [node name="GroundRaycast" type="RayCast2D" parent="."]
-target_position = Vector2(0, 25)
 
 [node name="WallRaycast" type="RayCast2D" parent="."]
 target_position = Vector2(20, 0)
@@ -33,3 +34,6 @@ collision_mask = 6
 [node name="DetectionShape" type="CollisionShape2D" parent="PlayerDetection"]
 position = Vector2(435, 323)
 shape = SubResource("CircleShape2D_umhiq")
+
+[connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
+[connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]
